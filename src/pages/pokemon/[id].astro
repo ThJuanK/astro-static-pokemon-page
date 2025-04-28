@@ -1,0 +1,47 @@
+---
+import type { GetStaticPaths } from "astro";
+import MainLayout from "@layouts/MainLayout.astro";
+import PokemonCard from '@components/pokemons/PokemonCard.astro';
+import type { PokemonListResponse } from "@interface/PokemonListResponse";
+import Title from "@components/Title.astro";
+
+
+export const getStaticPaths = (async() => {
+    const resp: PokemonListResponse = await (await fetch('https://pokeapi.co/api/v2/pokemon?limit=151')).json();
+    const params = resp.results.map(({name, url}) => {
+        const id = url.split('/').at(-2)
+        return ({ params: {id}, props: {url, name} })
+    });
+    return params;
+}) satisfies GetStaticPaths;
+
+const { url, name } = Astro.props;
+const { id } = Astro.params;
+
+
+const audioSource = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${id}.ogg`
+---
+
+<MainLayout title={`Bulbasaur Page`}>
+
+    
+
+    <section class="mt-10 mx-10 flex flex-col justify-center items-center">
+        <div>
+            <button class="text-blue-500">Regresar</button>
+            <Title>{name}</Title>
+        </div>
+
+        <PokemonCard name={name} url={url} isBig/>
+        <audio controls class="mt-5">
+            <source src={audioSource} type="audio/ogg" />
+        </audio>
+    </section>
+
+    <style>
+       @reference "../../styles/global.css";
+        a {
+            @apply hover:underline text-blue-600;
+        }
+    </style>
+</MainLayout>
