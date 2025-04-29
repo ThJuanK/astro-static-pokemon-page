@@ -22,9 +22,14 @@ const { url } = Astro.props;
 const pokemonId = url.split("/").at(-2);
 
 const audioSource = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${pokemonId}.ogg`;
+const imageSource = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`
 ---
 
-<MainLayout title={`${name} page.`}>
+<MainLayout 
+    title={`${name} page.`} 
+    image={imageSource}
+    description="`${name} page description.`"
+    >
     <section class="mt-10 mx-10 flex flex-col justify-center items-center">
         <div
             class="flex flex-row justify-center items-center mt-10 mx-10 gap-5"
@@ -67,6 +72,7 @@ const audioSource = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/
 
         const handlePageLoad = () => {
             const btnFavorite = document.getElementById("btn-favorite")!;
+            if( !btnFavorite ) return;
             const pokemonId = Number(btnFavorite.dataset.pokemonId);
             const pokemonName = btnFavorite.dataset.pokemonName;
             const heartOutLine = btnFavorite.querySelector("[data-empty]")!;
